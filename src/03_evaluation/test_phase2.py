@@ -18,9 +18,14 @@ import seaborn as sns
 
 # ===== Konfiguration
 # Pfad zum Validierungsdatensatz
-DATA_DIR = '/home/surkgoun/nabu-project/nabu_split/validation/'
-# Pfad zur trainierten Modelldatei
-MODEL_PATH = '/home/surkgoun/nabu-project/model/final_nabu_resnet_20251216.keras'
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Daten und Modelle liegen voraussichtlich eine Ebene höher ('../') im Projektordner
+DATA_DIR = os.path.join(current_dir, '../nabu_split/')
+
+# Der Dateiname muss exakt stimmen
+MODEL_PATH = os.path.join(current_dir, '../model/final_nabu_resnet_20251216.keras')
+
 # Eingabegröße der Bilder (224x224 Pixel)
 IMG_SIZE = (224, 224)
 # Batch-Größe für die Inferenz
@@ -28,7 +33,7 @@ BATCH_SIZE = 32
 # Grenzwert für den F1-Score (Schwache Klassen werden hervorgehoben)
 THRESHOLD_F1 = 0.80
 # Ausgabeordner für die Ergebnisse
-OUTPUT_DIR = '/home/surkgoun/nabu-project/evaluation/'
+OUTPUT_DIR = os.path.join(current_dir, '../evaluation/')
 # =====
 
 def run_statistical_analysis():
