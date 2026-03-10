@@ -3,27 +3,34 @@
 import os
 import cv2
 
-# 1. Pfad zum Ordner mit den Originalbildern (Raw Data)
-input_folder = '/home/surkgoun/nabu_urdaten/nabu/Upload_Praedatoren/Sturmmöwe/Graswarder_2025_T533_Srp/'
+# --- Pfad-Konfiguration (Auf relative Pfade umgestellt) ---
+# 1. Aktuelles Verzeichnis des Skripts ermitteln
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Pfad zum Speicherordner für die bearbeiteten Bilder
-output_folder = '/home/surkgoun/nabu_bereinigt/sturmmoewe'
+# 2. Pfad zum Ordner mit den Originalbildern (Raw Data)
+input_folder = os.path.join(current_dir, 'nabu_urdaten/nabu/Upload_Praedatoren/Sturmmöwe/Graswarder_2025_T533_Srp/')
 
-# 3. Anteil des Beschnitts am unteren Rand (crop Percentage)
+# 3. Pfad zum Speicherordner für die bearbeiteten Bilder
+output_folder = os.path.join(current_dir, 'nabu_bereinigt/sturmmoewe/')
+
+# Sicherstellen, dass der Ausgabeordner existiert (Error-Prävention)
+os.makedirs(output_folder, exist_ok=True)
+
+# 4. Anteil des Beschnitts am unteren Rand (crop Percentage)
 # 0.12 bedeutet, dass die unteren 12% des Bildes entfernt werden.
 crop_percentage = 0.12
 
-# 4. Liste aller Bilddateien im Verzeichnis abrufen
+# 5. Liste aller Bilddateien im Verzeichnis abrufen
 image_files = []
 for file in os.listdir(input_folder):
     if file.lower().endswith(('.png', '.jpg', '.jpeg')):
         image_files.append(file)
 
-# 5.
+# 6.
 print(f"Starte die Verarbeitung von {len(image_files)} Bildern")
 print(f"Die unteren {crop_percentage*100}% werden entfernt.")
 
-# 6
+# 7
 count = 0
 
 for filename in image_files:
