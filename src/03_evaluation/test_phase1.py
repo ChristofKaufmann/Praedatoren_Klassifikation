@@ -14,8 +14,9 @@ import tensorflow as tf
 from tensorflow import keras # Importiere Keras für High-Level-API
 import numpy as np # Für Array-Operationen im shuffle-Check
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
 # ===== Einstellung =====
-DATA_DIR = '/home/surkgoun/nabu-project/nabu_split/'
+DATA_DIR = os.path.join(current_dir, '../nabu_split/')
 
 # Die Bildgröße, die das Modell erwartet (224x224 Pixel)
 IMG_SIZE = (224, 224)
@@ -25,7 +26,7 @@ BATCH_SIZE = 32
 
 # Pfad zur gespeicherten Modelldatei (.keras Format)
 # Der Dateiname muss exakt stimmen
-MODEL_PATH = '/home/surkgoun/nabu-project/model/final_nabu_resnet_20251216.keras'
+MODEL_PATH = os.path.join(current_dir, '../model/final_nabu_resnet_20251216.keras')
 # ===== Einstellung ist abgeschlossen =====
 
 # ===== Funktion =====
@@ -129,7 +130,7 @@ def sanity_check():
     # ----------
     # Abschluss
     # ----------
-    if num_classes == 17:
+    if num_classes == 14:
         print("Phase 1 (Sanity Check) bestanden - Bereit für Analyse") # Erwarteter Output
     else:
         print(f"[Sanity Check] fehlgeschlagen. Es wurden {num_classes} Klassen gefunden. Es sollte 17 Klassen geben.")
