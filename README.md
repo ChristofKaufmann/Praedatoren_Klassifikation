@@ -1,226 +1,128 @@
-# NABU Wildkamera: Automatische Bild-Selektion & Vorverarbeitung
+## Bildbasierte Erkennung von Prädatoren von Nestern.
 
-Dieses Repository enthält Python-Skripte zur effizienten Filterung und Vorverarbeitung von Rohdaten aus NABU-Wildkameras. Ziel des Projekts ist es, aus einer großen Menge an Serienaufnahmen (Bursts) einen bereinigten, hochwertigen Datensatz zu erzeugen, der für das Training von Machine-Learning-Modellen zur Wildtierklassifikation verwendet werden kann.
+<div align="justify">
+Dieses Repository enthält eine Pipeline zur effizienten Filterung und Vorverarbeitung von Bilddaten der NABU-Wildkameras. Das Hauptziel ist es, die optimalen Frames aus Serienaufnahmen (Bursts) zu extrahieren und störende Metadaten-Bereiche zu entfernen, um einen hochwertigen Trainingsdatensatz für die Wildtierklassifikation zu erstellen.
+</div>
 
-Wildkameras erzeugen häufig mehrere Bilder desselben Ereignisses innerhalb weniger Sekunden (Burst-Sequenzen). Dadurch erhöht sich zwar die Wahrscheinlichkeit, Tiere zu erfassen, gleichzeitig entstehen jedoch viele redundante Aufnahmen. Die Skripte in diesem Repository automatisieren die Auswahl der besten Bilder aus solchen Serien und führen notwendige Vorverarbeitungsschritte durch, bevor die Daten für Machine-Learning-Modelle verwendet werden.
+## **Wichtiger Hinweis zur Datenvorbereitung (Manuelle Sortierung)**
+<div align="justify">
+<b>ACHTUNG:</b> Die von NABU bereitgestellten Originalbilder sind unstrukturiert und enthalten oft tief verschachtelte Unterordner (Ordner innerhalb von Ordnern). Da die Pipeline eine klare Struktur erwartet, müssen die Daten <b>zwingend manuell</b> vorbereitet werden:
+<br></br>
+1. Überprüfen Sie alle Unterordner der Rohdaten gründlich.<br></br>
+2. Erstellen Sie für jede Tierart (Spezies) einen eigenen, eindeutig benannten Ordner innerhalb von <code>data/raw/</code>. <br></br>
+3. Sortieren Sie alle relevanten Bilder manuell in diese artspezifischen Ordner ein.
+<br></br>
+Ohne diese manuelle Konsolidierung der Daten kann die Pipeline die Bilder nicht korrekt zuordnen oder verarbeiten.
+</div>
 
-Das Repository stellt somit eine reproduzierbare Pipeline bereit, um Rohdaten aus Wildkameras für Machine-Learning-Anwendungen aufzubereiten.
 
----
-
-# Repository-Struktur
-
-Das Repository ist in mehrere Pipeline-Schritte unterteilt:
-
-```
-src/
-│
-├── 01_preprocessing
-│   Skripte zur Bereinigung der Rohbilder und Auswahl der besten Bilder
-│
-├── 02_training
-│   Vorbereitung der Datensätze und Training des Modells
-│
-├── 03_evaluation
-│   Evaluations- und Sanity-Check-Skripte
-│
-└── 04_deployment
-    Streamlit-Anwendung für interaktive Modellinferenz
-```
-
-Jede dieser Komponenten verarbeitet die Daten weiter und bereitet sie für den nächsten Schritt der Pipeline vor.
-
----
-
-# Manuelle Pipeline-Schritte
-
-Die aktuelle Implementierung erfordert einige manuelle Schritte, um den Datensatz vorzubereiten, das Modell zu trainieren und die Inferenzschnittstelle zu starten. Die folgenden Schritte beschreiben den vollständigen Workflow zur Reproduktion der Pipeline.
-
----
-
-## 1. Dataset-Verzeichnisse erstellen
-
-Bevor die Skripte ausgeführt werden, müssen die vom Training verwendeten Verzeichnisse existieren.
-
-Erstellen Sie folgende Ordner:
+## Verzeichnisstruktur
+<div align="justify">
+Alle Skripte arbeiten mit relativen Pfaden und setzen die folgende Standard-Struktur voraus. Der Ordner data/raw/ muss manuell erstellt und mit Daten gefüllt werden; alle anderen Verzeichnisse werden bei Bedarf automatisch von den Skripten generiert.
+</div>
+<br></br>
 
 ```
-src/02_training/nabu_regrouped
-src/02_training/nabu_split
-```
-
-* `nabu_regrouped` enthält den bereinigten Datensatz nach der Vorverarbeitung.
-* `nabu_split` enthält den finalen Trainingsdatensatz nach der Aufteilung.
-
-Diese Verzeichnisse werden später automatisch von den Skripten befüllt.
-
----
-
-## 2. Rohdaten vorbereiten und vorverarbeiten
-
-Der ursprüngliche NABU-Wildkamera-Datensatz ist aufgrund seiner Größe nicht im Repository enthalten.
-
-Nachdem die Rohbilder lokal verfügbar sind, müssen sie mit den Vorverarbeitungsskripten bereinigt werden. Diese befinden sich in:
+ROOT/
+├── data/
+│   ├── raw/                  # Input: Originalbilder vom NABU
+├── src/
+│   ├── 01_preprocessing/     # Vorverarbeitung
+│   ├── 02_training/          # Modelltraining
+│   └── 03_evaluation/        # Qualitätskontrolle
+│   └── 04_deployment/
+├── evaluation/               # Analyse-Reports (Confusion Matrix, Visualisierungen)
+├── Dockerfile
+├── logo.jpg
+├── requirements-dev.txt      # Notwendige Bibliotheken für Preprocessing und Machine Learning
+└── requirements.txt          # Erforderlich für die Installation von Streamlit (Deployment)
 
 ```
-src/01_preprocessing/
-```
 
-Die Skripte führen unter anderem folgende Schritte aus:
+## **Workflow: Ausführung der Pipeline**
+<div align="justify">
+Führen Sie die Skripte in der folgenden Reihenfolge aus, um das Projekt zu reproduzieren oder neue Daten zu verarbeiten.
+</div>
 
-* Entfernen von Metadaten-Rändern in Wildkamera-Bildern
-* Auswahl des besten Bildes aus Burst-Sequenzen
-* Entfernen beschädigter oder ungültiger Bilddateien
-* Vereinheitlichung des Bildformats
-
-Nach der Vorverarbeitung werden die bereinigten Bilder hier gespeichert:
-
-```
-src/02_training/nabu_regrouped
-```
-
-Dieser Ordner enthält den reorganisierten Datensatz, der anschließend für das Training vorbereitet wird.
-
----
-
-## 3. Datensatz in Train / Validation / Test aufteilen
-
-Nachdem die Vorverarbeitung abgeschlossen ist, muss der Datensatz in Trainings-, Validierungs- und Testdaten aufgeteilt werden.
-
-Führen Sie dazu das Skript aus:
+### **Schritt 1: Datenvorverarbeitung (Preprocessing)**
+<div align="justify">
+Best Shot Auswahl: Identifiziert und extrahiert das schärfste Bild aus jeder Burst-Serie basierend auf der Laplace-Varianz.
+</div>
+<br></br>
 
 ```
+Bash
+python src/01_preprocessing/01_select_best_shot.py
+```
+<div align="justify">
+Bild-Cropping: Entfernt den unteren Metadaten-Balken (ca. 12%), um sicherzustellen, dass das Modell nur auf relevante Bildmerkmale trainiert wird.
+</div>
+<br></br>
+
+```
+Bash
+python src/01_preprocessing/02_zuschneiden.py
+```
+<div align="justify">
+Datensatz-Splitting: Teilt die bereinigten Daten automatisch in Train (80%), Val (10%) und Test (10%) auf.
+</div>
+<br></br>
+
+```
+Bash
 python src/01_preprocessing/03_split_dataset_v2.py
 ```
 
-Dieses Skript erzeugt folgende Struktur:
+### **Schritt 2: Modelltraining (Training)**
+<div align="justify">
+Trainiert ein ResNet50-Modell auf Basis des vorbereiteten nabu_split Datensatzes.
+<br></br>
+Transfer Learning: Verwendung von ImageNet-Gewichten mit spezifischem Mapping für Wildtierarten.
+<br></br>
+Class Weights: Automatischer Ausgleich von Klassenimbalancen während des Trainings.
+</div>
+<br></br>
 
 ```
-src/02_training/nabu_split/
-    train/
-    validation/
-    test/
-```
-
-Jeder dieser Ordner enthält Unterordner für die jeweiligen Tierarten.
-
-Beispiel:
-
-```
-train/
-    fuchs/
-    kraehen/
-    moewen/
-    ...
-```
-
-TensorFlow bzw. Keras erkennt die Klassen automatisch anhand dieser Ordnernamen.
-
----
-
-## 4. Modell trainieren
-
-Das Training erfolgt mit folgendem Skript:
-
-```
+Bash
 python src/02_training/train_model.py
 ```
 
-Während des Trainings werden folgende Schritte durchgeführt:
+### **Schritt 3: Evaluation und Validierung**
+<div align="justify">
+Führt eine umfassende Qualitätssicherung in vier Phasen durch:
 
-* Laden des Datensatzes aus `nabu_split`
-* Berechnung von Class Weights zur Behandlung von Klassenungleichgewicht
-* Initialisierung eines ResNet50-Modells mit vortrainierten ImageNet-Gewichten
-* Anwendung einer Weight-Reusing-Strategie für ähnliche Tierarten
-* Training eines Klassifikationskopfes
-* Optionales Fine-Tuning der tieferen Netzwerkschichten
-
-Während des Trainings werden mehrere Artefakte erzeugt:
+Phase 1 (Sanity Check): Überprüfung der Modell-Ladefähigkeit und Daten-Integrität.
+</div>
+<br></br>
 
 ```
-best_model.keras
-final_nabu_resnet.keras
-training_history.csv
-train_history_plot.png
+Bash
+python src/03_evaluation/test_phase1.py
 ```
-
-Diese Dateien enthalten das trainierte Modell sowie Trainingsmetriken.
-
----
-
-## 5. Modell für die Deployment-Anwendung vorbereiten
-
-Die Streamlit-Anwendung erwartet das trainierte Modell unter dem Dateinamen:
+<div align="justify">
+Phase 2 (Statistik): Erstellung der Confusion Matrix und Identifikation "schwacher" Klassen (F1-Score < 0.80).
+</div>
+<br></br>
 
 ```
-model.keras
+Bash
+python src/03_evaluation/test_phase2.py
 ```
-
-Nach dem Training muss das Modell daher in das Deployment-Verzeichnis kopiert werden:
-
+<div align="justify">
+Phase 3 & 4 (Visual & Robustness): Visuelle Prüfung von Vorhersagen und Messung der Top-K Accuracy.
+</div>
+<br></br>
+    
 ```
-src/04_deployment/model.keras
+Bash
+python src/03_evaluation/test_phase3_4.py
 ```
+Alle Ergebnisse werden automatisch im Ordner evaluation/ gespeichert.
 
----
-
-## 6. Streamlit-Inferenzoberfläche starten
-
-Das Repository enthält eine Streamlit-Anwendung, mit der das Modell interaktiv getestet werden kann.
-
-Starten Sie die Anwendung mit:
-
+### **Schritt 4: Deployment (Interaktive Anwendung)**
+Starten Sie die Streamlit-Anwendung für die interaktive Modellinferenz:
+<br></br>
 ```
-streamlit run src/04_deployment/streamlit_app.py
-```
-
-Die Oberfläche ermöglicht:
-
-* das Hochladen von Wildkamera-Bildern
-* die Klassifikation durch das trainierte Modell
-* die Anzeige der vorhergesagten Tierart
-* die Darstellung von Klassifikationswahrscheinlichkeiten
-
----
-
-## 7. Evaluationsskripte ausführen (optional)
-
-Weitere Evaluations- und Sanity-Check-Skripte befinden sich in:
-
-```
-src/03_evaluation/
-```
-
-Diese Skripte prüfen unter anderem:
-
-* ob das trainierte Modell korrekt geladen werden kann
-* ob die Dataset-Struktur korrekt erkannt wird
-* ob Vorhersagen auf Validierungsdaten durchgeführt werden können
-
-Einige Skripte erwarten den Datensatz unter:
-
-```
-src/nabu_split/
-```
-
-Falls der Datensatz unter
-
-```
-src/02_training/nabu_split/
-```
-
-erstellt wurde, muss der Ordner gegebenenfalls kopiert werden.
-
----
-
-## Hinweise zur Verwendung eines reduzierten Datensatzes
-
-Für Entwicklungs- oder Testzwecke kann auch ein reduzierter Datensatz mit wenigen Klassen verwendet werden.
-
-Dabei müssen folgende Anpassungen vorgenommen werden:
-
-* `NUM_CLASSES` in `train_model.py` muss der tatsächlichen Anzahl der Klassen entsprechen
-* `IMAGENET_MAP` muss entsprechend angepasst werden
-
-Dadurch kann die Pipeline schneller getestet werden, ohne den vollständigen Datensatz zu verwenden.
-
+Bash
+python -m streamlit run src/04_deployment/streamlit_app.py
