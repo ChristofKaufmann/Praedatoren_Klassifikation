@@ -47,15 +47,36 @@ Führen Sie die Skripte in der folgenden Reihenfolge aus, um das Projekt zu repr
 
 ### **Schritt 1: Datenvorverarbeitung (Preprocessing)**
 <div align="justify">
+Wichtig:<br></br>
+Bevor Sie dieses Skript zum ersten Mal ausführen, müssen Sie input_folder und output_folder innerhalb der Datei 01_select_best_shot.py manuell an die Tierart anpassen, die Sie gerade verarbeiten möchten.
+<br></br>
+Zu bearbeitende Codezeile:
+</div>
+
+```
+input_folder = os.path.join(current_dir, '../../data/raw/fuchs/')
+output_folder = os.path.join(current_dir, '../../data/processed/fuchs/')
+```
+<div align="justify">
 Best Shot Auswahl: Identifiziert und extrahiert das schärfste Bild aus jeder Burst-Serie basierend auf der Laplace-Varianz.
 </div>
-<br></br>
 
 ```
 Bash
 python src/01_preprocessing/01_select_best_shot.py
 ```
+---
+
 <div align="justify">
+Wichtig: <br></br>
+Genau wie bei der Best-Shot-Auswahl müssen Sie auch vor der Ausführung von 02_zuschneiden.py die Verzeichnisse im Quellcode manuell anpassen.
+
+Zu bearbeitende Codezeilen:
+```
+input_folder = os.path.join(current_dir, '../../data/processed/fuchs/')
+output_folder = os.path.join(current_dir, '../../data/final/fuchs/')
+```
+<br></br>
 Bild-Cropping: Entfernt den unteren Metadaten-Balken (ca. 12%), um sicherzustellen, dass das Modell nur auf relevante Bildmerkmale trainiert wird.
 </div>
 <br></br>
@@ -64,6 +85,8 @@ Bild-Cropping: Entfernt den unteren Metadaten-Balken (ca. 12%), um sicherzustell
 Bash
 python src/01_preprocessing/02_zuschneiden.py
 ```
+---
+
 <div align="justify">
 Datensatz-Splitting: Teilt die bereinigten Daten automatisch in Train (80%), Val (10%) und Test (10%) auf.
 </div>
@@ -73,6 +96,8 @@ Datensatz-Splitting: Teilt die bereinigten Daten automatisch in Train (80%), Val
 Bash
 python src/01_preprocessing/03_split_dataset_v2.py
 ```
+
+---
 
 ### **Schritt 2: Modelltraining (Training)**
 <div align="justify">
