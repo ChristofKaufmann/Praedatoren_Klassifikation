@@ -5,7 +5,7 @@
 import io
 import os
 import streamlit as st
-import tensorflow as tf
+import keras
 import pandas as pd  # excel
 import numpy as np
 from PIL import Image  # pillow-Bibliothek für die Bildverarbeitung (öffnen, resizing)
@@ -168,7 +168,7 @@ CLASS_NAMES = [
 @st.cache_resource
 def load_model():
     try:
-        return tf.keras.models.load_model(MODEL_PATH)
+        return keras.models.load_model(MODEL_PATH)
     except Exception as e:
         st.error(f"Fehler beim Laden des Modells: {e}")
         return None
