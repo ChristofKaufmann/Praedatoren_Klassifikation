@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 #    assume training has been performed in git-root
 COPY best_model.keras model.keras
 COPY src/04_deployment/.config .streamlit/config.toml
-COPY logo.jpg src/04_deployment/streamlit_app.py .
+COPY src/04_deployment/logo.jpg src/04_deployment/streamlit_app.py .
 
 # 5. Streamlit-Konfigurationsordner sicherstellen
 RUN mkdir -p .streamlit
