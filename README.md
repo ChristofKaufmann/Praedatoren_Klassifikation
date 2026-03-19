@@ -118,10 +118,6 @@ Alle Ergebnisse werden automatisch im Ordner `evaluation/` gespeichert.
 
 ### Schritt 4: Deployment (Interaktive Anwendung)
 
-> [!IMPORTANT]
->
-> Die Dateien model.keras und logo.jpg müssen sich zwingend im selben Ordner befinden, damit die Anwendung ordnungsgemäß geladen werden kann.
-
 Starten Sie die Streamlit-Anwendung für die interaktive Modellinferenz.
 
 ``` bash
