@@ -7,25 +7,25 @@ Dieses Repository enthält eine Pipeline zur effizienten Filterung und Vorverarb
 Alle Skripte arbeiten mit relativen Pfaden und setzen die folgende Standard-Struktur voraus.
 
 ``` plain
-ROOT/
-├┈┈ data/                     # nicht im Repository enthalten
-│   └── raw/                  # Originalbilder vom NABU nach Tierart sortiert
-│       ├── austernfischer/   # Bilder der Tierart Austernfischer ohne weitere Unterverzeichnisse
-│       ├── fuchs/            # Bilder der Tierart Fuchs ohne weitere Unterverzeichnisse
-│       ┊   ...               # weitere Tierarten
-│       └── steinwaelzer/     # Bilder der Tierart Steinwaelzer ohne weitere Unterverzeichnisse
-├── src/
-│   ├── 01_preprocessing/     # Vorverarbeitung
-│   ├── 02_training/          # Modelltraining
-│   ├── 03_evaluation/        # Qualitätskontrolle
-│   └── 04_deployment/
+📁ROOT/
+├┈┈ 📂data/                     # nicht im Repository enthalten
+│   └── 📂raw/                  # Originalbilder vom NABU nach Tierart sortiert
+│       ├── 📂austernfischer/   # Bilder der Tierart Austernfischer ohne weitere Unterverzeichnisse
+│       ├── 📂fuchs/            # Bilder der Tierart Fuchs ohne weitere Unterverzeichnisse
+│       ┊   ...                 # weitere Tierarten
+│       └── 📂steinwaelzer/     # Bilder der Tierart Steinwaelzer ohne weitere Unterverzeichnisse
+├── 📁src/
+│   ├── 📁01_preprocessing/     # Vorverarbeitung
+│   ├── 📁02_training/          # Modelltraining
+│   ├── 📁03_evaluation/        # Qualitätskontrolle
+│   └── 📁04_deployment/
 │        └── logo.jpg         # NABU-logo
-├┈┈ evaluation/               # nicht im Repository enthalten, Output für Analyse-Reports
-├┈┈ models/                   # nicht im Repository enthalten, Output für Training
-├── Dockerfile
+├┈┈ 📂evaluation/               # nicht im Repository enthalten, Output für Analyse-Reports
+├┈┈ 📂models/                   # nicht im Repository enthalten, Output für Training
+├── 📄Dockerfile
 ├── logo.jpg                  # NABU-logo
-├── requirements-dev.txt      # Notwendige Bibliotheken für Preprocessing und Machine Learning
-└── requirements.txt          # Erforderlich für die Installation von Streamlit (Deployment)
+├── 📄requirements-dev.txt      # Notwendige Bibliotheken für Preprocessing und Machine Learning
+└── 📄requirements.txt          # Erforderlich für die Installation von Streamlit (Deployment)
 
 ```
 
