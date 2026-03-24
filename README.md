@@ -19,14 +19,11 @@ Alle Skripte arbeiten mit relativen Pfaden und setzen die folgende Standard-Stru
 │   ├── 📁02_training/          # Modelltraining
 │   ├── 📁03_evaluation/        # Qualitätskontrolle
 │   └── 📁04_deployment/
-│        └── logo.jpg         # NABU-logo
 ├┈┈ 📂evaluation/               # nicht im Repository enthalten, Output für Analyse-Reports
 ├┈┈ 📂models/                   # nicht im Repository enthalten, Output für Training
 ├── 📄Dockerfile
-├── logo.jpg                  # NABU-logo
 ├── 📄requirements-dev.txt      # Notwendige Bibliotheken für Preprocessing und Machine Learning
 └── 📄requirements.txt          # Erforderlich für die Installation von Streamlit (Deployment)
-
 ```
 
 Die Bilddaten, die für dieses Projekt benötigt werden, sind nicht öffentlich verfügbar und nur für Projektangehörige zugänglich. Die Vorverarbeitungsskripte erwarten die Bilder nach Tierart sortiert in `data/raw/` und die Verzeichnisnamen müssen den Klassennamen entsprechen. Der Ordner `data/raw/` muss manuell erstellt und mit Daten gefüllt werden.
